@@ -41,13 +41,10 @@ namespace Adafruit_LEDBackpack
         {
             if (displayPosition > 4) return;
 
-
-    int bitmask = showDot? _numbertable[number] | _numbertable[number] << 7 : _numbertable[number];
-
-            WriteDigitRaw(displayPosition, _numbertable[number] | (showDot << 7));
+            WriteDigitRaw(displayPosition, _numbertable[number] | (showDot? 1:0  << 7));
         }
 
-        public void WriteDigitRaw(int displayPosition, byte bitmask)
+        public void WriteDigitRaw(int displayPosition, int bitmask)
         {
             _displaybuffer[displayPosition] = bitmask;
         }
