@@ -107,7 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlphaNumericFourCharacter.cs" />
+    <Compile Include="AlphaNumericFourCharacters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Adafruit_LEDBackpack.rd.xml" />
   </ItemGroup>
