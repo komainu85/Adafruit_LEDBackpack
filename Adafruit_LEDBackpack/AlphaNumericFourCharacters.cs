@@ -58,18 +58,22 @@ namespace Adafruit_LEDBackpack
         public void ClearDisplay()
         {
             _displaybuffer.Add(new byte[] { 0x00, 0000000 });
+            _displaybuffer.Add(new byte[] { 0x01, 0000000 });
             _displaybuffer.Add(new byte[] { 0x02, 0000000 });
+            _displaybuffer.Add(new byte[] { 0x03, 0000000 });
             _displaybuffer.Add(new byte[] { 0x04, 0000000 });
+            _displaybuffer.Add(new byte[] { 0x05, 0000000 });
             _displaybuffer.Add(new byte[] { 0x06, 0000000 });
+            _displaybuffer.Add(new byte[] { 0x07, 0000000 });
             _displaybuffer.Add(new byte[] { 0x08, 0000000 });
-
         }
 
-        public void WriteCharacter(int position, Char displayChar)
+        public void WriteCharacters(char firstChar, char secondChar, char thirdChar, char forthChar)
         {
-            byte[] charCode = new byte[] { 0x00, Convert.ToByte(_displayCharacters[displayChar]) };
-
-            _displaybuffer.Add(charCode);
+            _displaybuffer.Add(new byte[] { 0x00, Convert.ToByte(_displayCharacters[firstChar]) });
+            _displaybuffer.Add(new byte[] { 0x02, Convert.ToByte(_displayCharacters[secondChar]) });
+            _displaybuffer.Add(new byte[] { 0x04, Convert.ToByte(_displayCharacters[thirdChar]) });
+            _displaybuffer.Add(new byte[] { 0x06, Convert.ToByte(_displayCharacters[forthChar]) });
         }
 
         public async void WriteDisplay()
