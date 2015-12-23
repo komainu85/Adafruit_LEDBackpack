@@ -11,7 +11,7 @@ namespace Adafruit_LEDBackpack
     public sealed class AlphaNumericFourCharacters
     {
         private readonly int _deviceAddress;
-        private readonly List<byte[]> _displaybuffer = new List<byte[]>();
+        public readonly List<byte[]> Displaybuffer = new List<byte[]>();
         private readonly Dictionary<char, int> _displayCharacters = new Dictionary<char, int>();
 
         public AlphaNumericFourCharacters() : this(0x70)
@@ -20,8 +20,9 @@ namespace Adafruit_LEDBackpack
 
         public AlphaNumericFourCharacters(Int32 deviceAddress)
         {
-            _displaybuffer.Add(new byte[] { 0x21 });
             _deviceAddress = deviceAddress;
+
+            Displaybuffer.Add(new byte[] { 0x21 });
 
             _displayCharacters.Add('0', 0x3F);
             _displayCharacters.Add('1', 0x06);
@@ -42,7 +43,7 @@ namespace Adafruit_LEDBackpack
                 brightness = 15;
             }
 
-            _displaybuffer.Add(new byte[] { 0xE0, Convert.ToByte(brightness) });
+            Displaybuffer.Add(new byte[] { 0xE0, Convert.ToByte(brightness) });
         }
 
         public void SetBlinkRate(int blinkRate)
@@ -52,28 +53,33 @@ namespace Adafruit_LEDBackpack
                 blinkRate = 0;
             }
 
-            _displaybuffer.Add(new byte[] { (byte)(0x80 | 0x01 | blinkRate << 1) });
+            Displaybuffer.Add(new byte[] { (byte)(0x80 | 0x01 | blinkRate << 1) });
         }
 
         public void ClearDisplay()
         {
-            _displaybuffer.Add(new byte[] { 0x00, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x01, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x02, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x03, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x04, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x05, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x06, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x07, 0000000 });
-            _displaybuffer.Add(new byte[] { 0x08, 0000000 });
+            for (int i = 0; i <= 8; i++)
+            {
+                Displaybuffer.Add(new byte[] { Convert.ToByte(i), 0000000 });
+            }
+
+            //Displaybuffer.Add(new byte[] { 0x00, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x01, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x02, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x03, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x04, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x05, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x06, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x07, 0000000 });
+            //Displaybuffer.Add(new byte[] { 0x08, 0000000 });
         }
 
         public void WriteCharacters(char firstChar, char secondChar, char thirdChar, char forthChar)
         {
-            _displaybuffer.Add(new byte[] { 0x00, Convert.ToByte(_displayCharacters[firstChar]) });
-            _displaybuffer.Add(new byte[] { 0x02, Convert.ToByte(_displayCharacters[secondChar]) });
-            _displaybuffer.Add(new byte[] { 0x04, Convert.ToByte(_displayCharacters[thirdChar]) });
-            _displaybuffer.Add(new byte[] { 0x06, Convert.ToByte(_displayCharacters[forthChar]) });
+            Displaybuffer.Add(new byte[] { 0x00, Convert.ToByte(_displayCharacters[firstChar]) });
+            Displaybuffer.Add(new byte[] { 0x02, Convert.ToByte(_displayCharacters[secondChar]) });
+            Displaybuffer.Add(new byte[] { 0x04, Convert.ToByte(_displayCharacters[thirdChar]) });
+            Displaybuffer.Add(new byte[] { 0x06, Convert.ToByte(_displayCharacters[forthChar]) });
         }
 
         public async void WriteDisplay()
@@ -83,7 +89,7 @@ namespace Adafruit_LEDBackpack
 
             using (I2cDevice device = await I2cDevice.FromIdAsync(deviceInfo[0].Id, settings))
             {
-                foreach (var byteValue in _displaybuffer)
+                foreach (var byteValue in Displaybuffer)
                 {
                     device.Write(byteValue);
                 }
@@ -94,7 +100,6 @@ namespace Adafruit_LEDBackpack
         {
             string aqs = I2cDevice.GetDeviceSelector("I2C1");
 
-            // Find the I2C bus controller with our selector string
             var dis = await DeviceInformation.FindAllAsync(aqs);
 
             return dis;
