@@ -11,13 +11,16 @@ namespace Adafruit_LEDBackpack.Tests
     public class FourCharactersTests
     {
         [Test]
-        public void BytesForClearDisplayAddedToDisplatBuffer()
+        public void BytesForClearDisplayAddedToDisplayBuffer()
         {
             var alphaNumericFourCharacters = new AlphaNumericFourCharacters();
 
             alphaNumericFourCharacters.ClearDisplay();
 
-            Assert.Contains(new byte[] { Convert.ToByte(0), 0000000 }, alphaNumericFourCharacters.Displaybuffer);
+            for (int i = 0; i < 9; i++)
+            {
+                Assert.Contains(new byte[] { Convert.ToByte(i), 0000000 }, alphaNumericFourCharacters.Displaybuffer);
+            }
         }
     }
 }

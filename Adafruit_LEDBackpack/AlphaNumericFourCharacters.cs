@@ -94,6 +94,8 @@ namespace Adafruit_LEDBackpack
                     device.Write(byteValue);
                 }
             }
+
+            Displaybuffer.Clear();
         }
 
         private async Task<DeviceInformationCollection> GetDevice()
